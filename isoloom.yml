@@ -1,0 +1,44 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# Hackazon (by Rapid7) as an Isoloom spec: the upstream PHP source, vendored unchanged in
+# build/hackazon/app/, served by a PHP 5.6 / Apache image we wrote (upstream has no Dockerfile),
+# and a MariaDB machine. The image runs Hackazon's install wizard at first start.
+# `isoloom generate`, then `isoloom up docker`.
+version: 1
+name: hackazon
+
+networks:
+  lab: { cidr: 10.60.25.0/24, internet: false }
+
+machines:
+  db:
+    networks: { lab: 20 }
+    services: [{ port: 3306, name: mariadb }]
+    resources: { cpus: 1, memory_mb: 512 }
+    volumes: { data: /var/lib/mysql }
+    docker:
+      build: build/db
+
+  hackazon:
+    networks: { lab: 10 }
+    services: [{ port: 80, name: web, http: true, publish: 8025 }]
+    resources: { cpus: 1, memory_mb: 512 }
+    depends_on: [db]
+    docker:
+      build: build/hackazon
+
+checks:
+  - name: the store answers
+    http: http://hackazon/
+    wait: 180
+  - name: test_user / 123456 logs in (the database is installed)
+    script: checks/login.sh
+    wait: 120
+  - name: the REST API hands out a token
+    script: checks/api.sh
+  - name: admin / hackazon logs in to the back office
+    script: checks/admin.sh
+
+message: |
+  Hackazon answers at http://localhost:{{ machines.hackazon.services.0.publish }}/. The store is
+  already installed: log in as test_user / 123456; the back office is /admin (admin / hackazon).
+  The REST API used by the mobile app is under /api (start with /api/auth, basic auth).

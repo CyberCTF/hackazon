@@ -1,0 +1,9 @@
+{
+  "title": "Hackazon",
+  "description": "Rapid7's Hackazon: a vulnerable online store with an AJAX interface, strict checkout workflows and a RESTful API used by its companion mobile app, full of SQL injection, XSS, command injection and access control flaws.",
+  "question": "Find and exploit the vulnerabilities of the Hackazon store, its back office and its REST API.",
+  "category": "WEB",
+  "difficulty": 2,
+  "evidence_kind": "SECRET",
+  "capabilities": ["sql-injection", "cross-site-scripting", "command-injection", "rest-api-testing", "broken-access-control", "csrf"]
+}
