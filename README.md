@@ -16,7 +16,7 @@ image written for it (upstream ships no Dockerfile), with the install wizard run
 
 ```bash
 isoloom generate
-isoloom up docker
+isoloom run docker
 ```
 
 Then open http://localhost:8025/ and log in as `test_user` / `123456`. The back office is
