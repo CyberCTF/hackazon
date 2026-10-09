@@ -4,6 +4,5 @@
   "question": "Find and exploit the vulnerabilities of the Hackazon store, its back office and its REST API.",
   "category": "WEB",
   "difficulty": 2,
-  "evidence_kind": "SECRET",
-  "capabilities": ["sql-injection", "cross-site-scripting", "command-injection", "rest-api-testing", "broken-access-control", "csrf"]
+  "evidence_kind": "SECRET"
 }
