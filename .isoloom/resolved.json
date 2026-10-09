@@ -135,7 +135,8 @@
       "vagrant": "needs `vm:` on db, hackazon",
       "proxmox": "needs `vm:` on db, hackazon",
       "cloud-vm": "needs `vm:` on db, hackazon",
-      "external": "needs `external:` on db, hackazon"
+      "external": "needs `external:` on db, hackazon",
+      "cloud-services": "left out by `targets:`"
     }
   },
   "checks": {
