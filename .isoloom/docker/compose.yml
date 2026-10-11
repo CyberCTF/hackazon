@@ -18,6 +18,8 @@ services:
     networks:
       lab:
         ipv4_address: 10.60.25.20
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
     volumes:
     - db-data:/var/lib/mysql
     - isoloom-probe-amd64:/.isoloom-probe:ro
@@ -68,6 +70,26 @@ services:
     labels:
       isoloom.managed: 'true'
       isoloom.environment: hackazon
+  db-init-1:
+    image: isoloom/hackazon-db
+    entrypoint:
+    - /bin/sh
+    - /isoloom/init/flag.sh
+    volumes:
+    - ../../ctf/flag.sh:/isoloom/init/flag.sh:ro
+    - db-data:/var/lib/mysql
+    network_mode: service:db
+    environment:
+      CTF_FLAG_MAIN: ${CTF_FLAG_MAIN:-}
+    depends_on:
+      db:
+        condition: service_healthy
+      db-routes:
+        condition: service_healthy
+    restart: no
+    labels:
+      isoloom.managed: 'true'
+      isoloom.environment: hackazon
   hackazon:
     build:
       context: ../../build/hackazon
@@ -100,6 +122,8 @@ services:
         condition: service_completed_successfully
       db:
         condition: service_healthy
+      db-init-1:
+        condition: service_completed_successfully
       db-routes:
         condition: service_healthy
     deploy:
@@ -154,6 +178,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      db-init-1:
+        condition: service_completed_successfully
       db-routes:
         condition: service_healthy
       hackazon:
@@ -176,6 +202,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      db-init-1:
+        condition: service_completed_successfully
       db-routes:
         condition: service_healthy
       hackazon:
@@ -198,6 +226,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      db-init-1:
+        condition: service_completed_successfully
       db-routes:
         condition: service_healthy
       hackazon:

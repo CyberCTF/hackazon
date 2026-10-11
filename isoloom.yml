@@ -6,6 +6,9 @@
 version: 1
 name: hackazon
 
+# Given by the CyberCTF launcher: this player's flag. Without it the development flag.
+inputs: [CTF_FLAG_MAIN]
+
 networks:
   lab: { cidr: 10.60.25.0/24, internet: false }
 
@@ -15,8 +18,10 @@ machines:
     services: [{ port: 3306, name: mariadb }]
     resources: { cpus: 1, memory_mb: 512 }
     volumes: { data: /var/lib/mysql }
+    inputs: [CTF_FLAG_MAIN]
     docker:
       build: build/db
+      init: [ctf/flag.sh]
 
   hackazon:
     networks: { lab: 10 }

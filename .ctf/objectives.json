@@ -1,0 +1,55 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Find a SQL injection in the Hackazon store and use it to read the flag stored in the flags table of the ctf database, next to the store's own.",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-hackazon}",
+      "hints": [
+        "Upstream's VULNERABILITIES.md explains how the injected fields are configured per page: the product page and the search by category are two of them.",
+        "Some injections show no error at all. The answer then comes from how the page changes, one yes/no question at a time."
+      ],
+      "steps": [
+        {
+          "key": "parameter",
+          "title": "Find the input",
+          "prompt": "Which URL parameter of the product page selects the product, and reaches the query unescaped?",
+          "check": {
+            "answer": [
+              "id",
+              "product id"
+            ]
+          }
+        },
+        {
+          "key": "blind",
+          "title": "Name the variant",
+          "prompt": "The category search filters products without showing any database error. What is that SQL injection variant called?",
+          "check": {
+            "answer": [
+              "blind",
+              "blind sql injection",
+              "boolean-based blind",
+              "boolean based blind"
+            ]
+          }
+        },
+        {
+          "key": "catalogue",
+          "title": "Enumerate the databases",
+          "prompt": "Which built-in schema lists the databases and tables the store's database user can read, including the ctf one?",
+          "check": {
+            "answer": [
+              "information_schema",
+              "information schema"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
