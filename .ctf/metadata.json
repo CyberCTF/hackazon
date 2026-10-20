@@ -1,8 +1,11 @@
 {
+  "project_name": "cyberlabs-hackazon",
+  "slug": "hackazon",
   "title": "Hackazon",
   "description": "Rapid7's Hackazon: a vulnerable online store with an AJAX interface, strict checkout workflows and a RESTful API used by its companion mobile app, full of SQL injection, XSS, command injection and access control flaws.",
-  "question": "Use one of the store's SQL injections to read the flag in the flags table of the ctf database.",
-  "category": "WEB",
+  "category": "web",
   "difficulty": 2,
-  "evidence_kind": "SECRET"
+  "evidence_kind": "SECRET",
+  "capabilities": [],
+  "question": "Use one of the store's SQL injections to read the flag in the flags table of the ctf database."
 }

@@ -7,30 +7,39 @@ version: 1
 name: hackazon
 
 # Given by the CyberCTF launcher: this player's flag. Without it the development flag.
-inputs: [CTF_FLAG_MAIN]
+inputs:
+  CTF_FLAG_MAIN: {}
 
 networks:
-  lab: { cidr: 10.60.25.0/24, internet: false }
+  lab: {cidr: 10.60.25.0/24, internet: false}
 
 machines:
   db:
-    networks: { lab: 20 }
-    services: [{ port: 3306, name: mariadb }]
-    resources: { cpus: 1, memory_mb: 512 }
-    volumes: { data: /var/lib/mysql }
-    inputs: [CTF_FLAG_MAIN]
-    docker:
+    networks: {lab: 20}
+    resources: {cpus: 1, memory_mb: 512}
+    volumes: {data: /var/lib/mysql}
+    ports:
+      mariadb:
+        port: 3306
+    files:
+      - path: /run/lab/ctf_flag_main
+        input: CTF_FLAG_MAIN
+    setup:
+      - ctf/flag.sh
+    app:
       build: build/db
-      init: [ctf/flag.sh]
 
   hackazon:
-    networks: { lab: 10 }
-    services: [{ port: 80, name: web, http: true, publish: 8025 }]
-    resources: { cpus: 1, memory_mb: 512 }
+    networks: {lab: 10}
+    resources: {cpus: 1, memory_mb: 512}
     depends_on: [db]
-    docker:
+    ports:
+      web:
+        port: 80
+        protocol: http
+        publish: true
+    app:
       build: build/hackazon
-
 checks:
   - name: the store answers
     http: http://hackazon/
@@ -44,6 +53,6 @@ checks:
     script: checks/admin.sh
 
 message: |
-  Hackazon answers at http://localhost:{{ machines.hackazon.services.0.publish }}/. The store is
+  Hackazon answers at {{ machines.hackazon.ports.web.url }}. The store is
   already installed: log in as test_user / 123456; the back office is /admin (admin / hackazon).
   The REST API used by the mobile app is under /api (start with /api/auth, basic auth).
